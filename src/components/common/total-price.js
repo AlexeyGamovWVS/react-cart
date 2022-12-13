@@ -1,7 +1,10 @@
 import React from 'react';
 import styles from './total-price.module.css';
-
-export const TotalPrice = ({ totalPrice, discount, extraClass }) => {
+import { useContext } from 'react';
+import { TotalPriceContext, DiscountContext } from '../../services/appContext';
+export const TotalPrice = ({ extraClass }) => {
+	const {totalPrice} = useContext(TotalPriceContext);
+	const {discount} = useContext(DiscountContext);
   return (
     <div className={`${styles.container} ${extraClass}`}>
       <p className={styles.text}>Итого:</p>

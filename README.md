@@ -1,3 +1,5 @@
+# Ссылка на проект
+[Перейти ->](https://alexeygamovwvs.github.io/react-cart)
 # Tasks
 Провести рефакторинг и при помощи React Context API упростить взаимодействие разработчиков с состоянием приложения.
 Вносить исправления нужно в нескольких файлах: app/app.js, cart/index.js, cart/products-container.js, common/total-price.js и ui/promo-button.js.

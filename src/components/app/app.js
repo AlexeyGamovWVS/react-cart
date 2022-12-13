@@ -1,8 +1,9 @@
-import React from 'react';
-import styles from './app.module.css';
-import { Title } from '../../ui/title/title';
-import { Cart } from '../cart';
-import { TotalPrice } from '../common/total-price';
+import React from "react";
+import styles from "./app.module.css";
+import { Title } from "../../ui/title/title";
+import { Cart } from "../cart";
+import { TotalPrice } from "../common/total-price";
+import { TotalPriceContext, DiscountContext } from "../../services/appContext";
 
 function App() {
   const [totalPrice, setTotalPrice] = React.useState(0);
@@ -10,14 +11,13 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Title text={'Корзина'} />
-      <Cart
-        setTotalPrice={setTotalPrice}
-        totalPrice={totalPrice}
-        setDiscount={setDiscount}
-        discount={discount}
-      />
-      <TotalPrice totalPrice={totalPrice} discount={discount} />
+      <TotalPriceContext.Provider value={{ totalPrice, setTotalPrice }}>
+        <DiscountContext.Provider value={{ discount, setDiscount }}>
+          <Title text={"Корзина"} />
+          <Cart/>
+          <TotalPrice/>
+        </DiscountContext.Provider>
+      </TotalPriceContext.Provider>
     </div>
   );
 }
