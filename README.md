@@ -1,3 +1,59 @@
+# Tasks
+Провести рефакторинг и при помощи React Context API упростить взаимодействие разработчиков с состоянием приложения.
+Вносить исправления нужно в нескольких файлах: app/app.js, cart/index.js, cart/products-container.js, common/total-price.js и ui/promo-button.js.
+
+## Рефакторинг глобального состояния
+Глобальный стейт хранится в компоненте App. Там определены состояния totalPrice и discount, и они передаются дочерним компонентам с помощью пропсов. Чтобы перенести эти состояния на механизм контекста:
+
+1. Создайте файл appContext.js в директории services и определите в нём контексты для скидки и общей стоимости товаров: 
+```jsx
+ export const TotalPriceContext = React.createContext(null);
+ export const DiscountContext = React.createContext(null);
+```
+ 
+2. Реализуйте провайдеры контекста в компоненте App. Они создают «область видимости», внутри которой любой компонент сможет получить содержимое контекста: 
+```jsx
+ return (
+   <div className={styles.app}>
+     <TotalPriceContext.Provider value={{totalPrice, setTotalPrice}}>
+       <DiscountContext.Provider value={{discount, setDiscount}}>
+         <Title text={'Корзина'} />
+         <Cart />
+         <TotalPrice />
+       </DiscountContext.Provider>
+     </TotalPriceContext.Provider>
+   </div>
+ );
+```
+
+3. Удалите все пропсы, с помощью которых передавали состояние другим компонентам, и получите состояния totalPrice и discount. Для этого нужно воспользоваться хуком useContext(): 
+```jsx
+ const { totalPrice, setTotalPrice } = useContext(TotalPriceContext);
+ const { discount, setDiscount } = useContext(DiscountContext);
+```
+
+## Рефакторинг состояния компонента ProductsContainer
+Похожим образом проведём рефакторинг состояния компонента ProductsContainer:
+
+1. Создайте файл productsContext.js в директории services и определите в нём контексты данных о товарах и названия промоакции: 
+```jsx
+ export const DataContext = React.createContext([]);
+ export const PromoContext = React.createContext('');
+```
+
+2. Реализуйте провайдеры контекста внутри ProductsContainer и в качестве значения передайте им параметры стейтов data и promo: 
+```jsx
+ <div className={`${styles.container}`}>
+   <DataContext.Provider value={{ data, setData }}>
+     <PromoContext.Provider value={{ promo, setPromo }}>
+ // ...
+```
+ 
+3. Замените все пропсы на контекст в дочерних компонентах: 
+```jsx
+ const { data, setData } = useContext(DataContext);
+ const { promo, setPromo } = useContext(PromoContext);
+```
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
