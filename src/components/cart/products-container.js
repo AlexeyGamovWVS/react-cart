@@ -18,7 +18,8 @@ import { DataContext, PromoContext } from "../../services/productsContext";
 
 export const ProductsContainer = () => {
   const { setTotalPrice } = useContext(TotalPriceContext);
-  const { setDiscount } = useContext(DiscountContext);
+  const { discountDispatcher } = useContext(DiscountContext);
+	
   const [data, setData] = useState([]);
   const [promo, setPromo] = useState("");
   const [itemsRequest, setItemsRequest] = useState(false);
@@ -55,13 +56,13 @@ export const ProductsContainer = () => {
       .then((res) => {
         if (res && res.success) {
           setPromo(inputValue);
-          setDiscount(res.discount);
+          discountDispatcher({type: 'set', payload: res.discount});
           setPromoRequest(false);
           setPromoFailed(false);
         } else {
           setPromoFailed(true);
           setPromoRequest(false);
-          setDiscount(null);
+          discountDispatcher({type: 'reset'});
           setPromo("");
         }
       })
@@ -69,7 +70,7 @@ export const ProductsContainer = () => {
         console.log(err);
         setPromoRequest(false);
       });
-  }, [setDiscount]);
+  }, [discountDispatcher]);
 
   const content = useMemo(() => {
     return itemsRequest ? (

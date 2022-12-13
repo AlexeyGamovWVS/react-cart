@@ -6,10 +6,10 @@ import { DiscountContext } from '../../services/appContext';
 
 export const PromoButton = ({ children, extraClass }) => {
 	const {setPromo} = React.useContext(PromoContext);
-	const {setDiscount} = React.useContext(DiscountContext);
+	const {discountDispatcher} = React.useContext(DiscountContext);
   const cancelPromo = () => {
     setPromo('');
-    setDiscount(null);
+    discountDispatcher({type: 'reset'});
   };
   return (
     <button type="button" className={`${styles.button} ${extraClass}`} onClick={cancelPromo}>

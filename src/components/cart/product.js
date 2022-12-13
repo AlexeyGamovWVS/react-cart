@@ -18,9 +18,9 @@ export const Product = ({
 }) => {
 	const {data, setData} = useContext(DataContext);
 	const {totalPrice, setTotalPrice} = useContext(TotalPriceContext);
-	const {discount} = useContext(DiscountContext);
-  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [
-    discount,
+	const {discountState} = useContext(DiscountContext);
+  const discountedPrice = useMemo(() => ((price - price * (discountState.discount / 100)) * qty).toFixed(0), [
+    discountState.discount,
     price,
     qty
   ]);
@@ -67,8 +67,8 @@ export const Product = ({
         <AmountButton onClick={increase}>+</AmountButton>
       </div>
       <div className={styles.price}>
-        <p className={`${styles.price} ${discount && styles.exPrice}`}>{price * qty} руб.</p>
-        {discount && <p className={styles.price}>{discountedPrice} руб.</p>}
+        <p className={`${styles.price} ${discountState.discount && styles.exPrice}`}>{price * qty} руб.</p>
+        {discountState.discount && <p className={styles.price}>{discountedPrice} руб.</p>}
       </div>
       <DeleteButton onDelete={onDelete} />
     </div>
