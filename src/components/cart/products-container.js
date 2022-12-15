@@ -14,13 +14,13 @@ import { PromoButton } from "../../ui/promo-button/promo-button";
 import { Loader } from "../../ui/loader/loader";
 import { useContext } from "react";
 import { TotalPriceContext, DiscountContext } from "../../services/appContext";
-import { DataContext, PromoContext } from "../../services/productsContext";
+import { PromoContext } from "../../services/productsContext";
+import { useSelector } from "react-redux";
 
 export const ProductsContainer = () => {
   const { setTotalPrice } = useContext(TotalPriceContext);
   const { discountDispatcher } = useContext(DiscountContext);
-	
-  const [data, setData] = useState([]);
+	const items = useSelector(store => store.cart.items);
   const [promo, setPromo] = useState("");
   const [itemsRequest, setItemsRequest] = useState(false);
   const [promoFailed, setPromoFailed] = useState(false);
@@ -33,7 +33,6 @@ export const ProductsContainer = () => {
     getItemsRequest()
       .then((res) => {
         if (res && res.success) {
-          setData(res.data);
           setItemsRequest(false);
         }
       })
@@ -45,9 +44,9 @@ export const ProductsContainer = () => {
 
   useEffect(() => {
     let total = 0;
-    data.map((item) => (total += item.price * item.qty));
+    items.map((item) => (total += item.price * item.qty));
     setTotalPrice(total);
-  }, [data, setTotalPrice]);
+  }, [items, setTotalPrice]);
 
   const applyPromoCode = useCallback(() => {
     const inputValue = inputRef.current.value;
@@ -76,7 +75,7 @@ export const ProductsContainer = () => {
     return itemsRequest ? (
       <Loader size="large" />
     ) : (
-      data.map((item, index) => {
+      items.map((item, index) => {
         return (
           <Product
             key={index}
@@ -85,7 +84,7 @@ export const ProductsContainer = () => {
         );
       })
     );
-  }, [itemsRequest, data]);
+  }, [itemsRequest, items]);
 
   const promoCodeStatus = useMemo(() => {
     return promoFailed ? (
@@ -103,7 +102,6 @@ export const ProductsContainer = () => {
 
   return (
     <div className={`${styles.container}`}>
-      <DataContext.Provider value={{ data, setData }}>
         <PromoContext.Provider value={{ promo, setPromo }}>
           {content}
           <div className={styles.promo}>
@@ -133,7 +131,6 @@ export const ProductsContainer = () => {
             )}
           </div>
         </PromoContext.Provider>
-      </DataContext.Provider>
       {promoCodeStatus}
     </div>
   );

@@ -29,6 +29,6 @@ const stepReducer = (state = "cart", action) => {
 };
 
 export const rootReducer = combineReducers({
-  cartReducer,
+  cart: cartReducer,
 	step: stepReducer,
 });
