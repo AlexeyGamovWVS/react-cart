@@ -205,6 +205,14 @@ const stepReducer = (state = "cart", action) => {
 
 11. Редьюсер stepReducer подключите к rootReducer. Присвойте stepReducer полю step
 
+# Взаимодействие react с redux
+
+У вас уже есть список товаров в хранилище store.cart.items. Вам нужно избавиться от хука const [data, setData] = useState([]); в файле для хранения списка товаров products-container.js. Все вызовы setData также следует удалить.
+
+1. Для получения товаров воспользуйтесь useSelector и избавьтесь от DataContext в блоке return и импортах.
+2. Из useSelector нужно получить ключ хранилища items, который содержит список товаров, и отрендерить товары из полученных данных. Не забудьте поменять data на items во всём компоненте ProductsContainer.
+3. Затем необходимо убрать useContext(DataContext) из файла product.js. Для операций над товарами нужно воспользоваться экшенами, которые вы сделали ранее: INCREASE_ITEM, DECREASE_ITEM, DELETE_ITEM. Помните, что для всех этих операций нужно передавать id товара в экшене. Для отправки экшенов воспользуйтесь хуком useDispatch в компоненте Product. Замените содержимое функций onDelete, decrease, increase на отправку экшенов в Redux. Вызовы setTotalPrice оставьте пока на своих местах в обновлённых функциях, а DataContext удалите из импортов.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
