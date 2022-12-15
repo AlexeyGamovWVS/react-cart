@@ -3,11 +3,34 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/app/app";
 import reportWebVitals from "./reportWebVitals";
-import { createStore } from "redux";
-import {Provider} from "react-redux";
+import { compose, createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
 import { rootReducer } from "./services/reducers";
+import thunk from 'redux-thunk';
+const composeEnhancers = 
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : compose;
 
-const store = createStore(rootReducer);
+const actionLogger = (store) => (next) => (action) => {
+  // Выводим в консоль время события и его содержание
+  console.log(`${new Date().getTime()} | Action: ${JSON.stringify(action)}`);
+  // Передаём событие «по конвейеру» дальше
+  return next(action);
+};
+
+const errorLogger = (store) => (next) => (action) => {
+  if (action.type === "SOMETHING_FAILED") {
+    console.error(`Произошла ошибка: ${JSON.stringify(action)}`);
+  }
+  return next(action);
+};
+
+const reduxTool = composeEnhancers();
+
+const enhancer = applyMiddleware(actionLogger, errorLogger, thunk);
+
+const store = createStore(rootReducer, enhancer);
 
 ReactDOM.render(
   <React.StrictMode>
