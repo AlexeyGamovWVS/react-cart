@@ -1,56 +1,26 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { applyPromoCodeRequest, getItemsRequest } from '../../services/fakeApi';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import styles from './products-container.module.css';
 import { Product } from './product';
 import { Input } from '../../ui/input/input';
 import { MainButton } from '../../ui/main-button/main-button';
 import { PromoButton } from '../../ui/promo-button/promo-button';
 import { Loader } from '../../ui/loader/loader';
-
-import { useSelector } from 'react-redux';
+import { applyPromo, getItems } from '../../services/actions/cart';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const ProductsContainer = () => {
-  const items = useSelector(store => store.cart.items);
-  const promoCode = useSelector(state => state.cart.promoCode);
-
-  const [itemsRequest, setItemsRequest] = useState(false);
-  const [promoFailed, setPromoFailed] = useState(false);
-  const [promoRequest, setPromoRequest] = useState(false);
-
+  //const items = useSelector(store => store.cart.items);
+  //const promoCode = useSelector(state => state.cart.promoCode);
   const inputRef = useRef(null);
+	const dispatch = useDispatch();
+	const { items, promoCode, promoDiscount, promoRequest, promoFailed, itemsRequest } = useSelector(store => store.cart);
+	useEffect(() => {
+		dispatch(getItems());
+	}, [dispatch]);
 
-  useEffect(() => {
-    setItemsRequest(true);
-    getItemsRequest()
-      .then(res => {
-        if (res && res.success) {
-          setItemsRequest(false);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setItemsRequest(false);
-      });
-  }, []);
-
-  const applyPromoCode = useCallback(() => {
-    const inputValue = inputRef.current.value;
-    setPromoRequest(true);
-    applyPromoCodeRequest(inputValue)
-      .then(res => {
-        if (res && res.success) {
-          setPromoRequest(false);
-          setPromoFailed(false);
-        } else {
-          setPromoFailed(true);
-          setPromoRequest(false);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setPromoRequest(false);
-      });
-  }, []);
+	const applyPromoCode = useCallback(() => {
+		dispatch(applyPromo(inputRef))
+	}, [inputRef, dispatch]);
 
   const content = useMemo(
     () => {
@@ -101,7 +71,7 @@ export const ProductsContainer = () => {
             {promoRequest ? <Loader size="small" inverse={true} /> : 'Применить'}
           </MainButton>
         </div>
-        {promoCode && <PromoButton extraClass={styles.promocode}>{promoCode}</PromoButton>}
+        {(promoCode && promoDiscount) && <PromoButton extraClass={styles.promocode}>{promoCode}</PromoButton>}
       </div>
       {promoCodeStatus}
     </div>
