@@ -1,45 +1,40 @@
-import React, { useMemo } from 'react';
-import { AmountButton } from '../../ui/amount-button/amount-button';
-import { DeleteButton } from '../../ui/delete-button/delete-button';
-import styles from './product.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { DECREASE_ITEM, DELETE_ITEM, INCREASE_ITEM } from '../../services/actions/cart';
+import { AmountButton } from "../../ui/amount-button/amount-button";
+import { DeleteButton } from "../../ui/delete-button/delete-button";
+import styles from "./product.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  DECREASE_ITEM,
+  DELETE_ITEM,
+  INCREASE_ITEM,
+} from "../../services/actions/cart";
+import { priceFormat } from "../common/utils";
 
 export const Product = ({ src, id, text, qty, price }) => {
   const dispatch = useDispatch();
-
-  const discount = useSelector(store => store.cart.promoDiscount);
-
-  const discountedPrice = useMemo(() => ((price - price * (discount / 100)) * qty).toFixed(0), [
-    discount,
-    price,
-    qty
-  ]);
-
+  const discount = useSelector((state) => state.cart.promoDiscount);
+  const discountedPrice = ((price - price * (discount / 100)) * qty).toFixed(0);
   const onDelete = () => {
     dispatch({
       type: DELETE_ITEM,
-      id
+      id,
     });
   };
-
   const decrease = () => {
     if (qty === 1) {
       onDelete();
     } else {
       dispatch({
         type: DECREASE_ITEM,
-        id
+        id,
       });
     }
   };
   const increase = () => {
     dispatch({
       type: INCREASE_ITEM,
-      id
+      id,
     });
   };
-
   return (
     <div className={`${styles.product}`}>
       <img className={styles.img} src={src} alt="фото товара." />
@@ -50,8 +45,12 @@ export const Product = ({ src, id, text, qty, price }) => {
         <AmountButton onClick={increase}>+</AmountButton>
       </div>
       <div className={styles.price}>
-        <p className={`${styles.price} ${discount && styles.exPrice}`}>{price * qty} руб.</p>
-        {discount && <p className={styles.price}>{discountedPrice} руб.</p>}
+        <p className={`${styles.price} ${discount && styles.exPrice}`}>
+          {priceFormat(price * qty)}
+        </p>
+        {discount && (
+          <p className={styles.price}>{priceFormat(discountedPrice)}</p>
+        )}
       </div>
       <DeleteButton onDelete={onDelete} />
     </div>
