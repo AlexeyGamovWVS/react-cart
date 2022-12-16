@@ -1,14 +1,15 @@
+import React from 'react';
 import { Tabs } from './tabs';
 import { ProductsContainer } from './products-container';
-import { useSelector } from 'react-redux';
 import { Postponed } from './postponed';
+import { useSelector } from 'react-redux';
 
 export const Cart = () => {
-	const currentTab = useSelector(store => store.cart.currentTab);
+  const currentTab = useSelector(state => state.cart.currentTab);
   return (
     <section>
       <Tabs />
-			{currentTab === 'items' ? (<ProductsContainer/>) : (<Postponed />)}
+      {currentTab === 'items' ? <ProductsContainer /> : <Postponed />}
     </section>
   );
 };

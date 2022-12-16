@@ -6,21 +6,30 @@ import {
   GET_ITEMS_FAILED,
   GET_ITEMS_REQUEST,
   GET_ITEMS_SUCCESS,
+  APPLY_PROMO_FAILED,
+  APPLY_PROMO_REQUEST,
+  APPLY_PROMO_SUCCESS,
   TAB_SWITCH,
-} from "../actions/cart";
-import { recommendedItems } from "../initialData";
+  GET_RECOMMENDED_ITEMS_FAILED,
+  GET_RECOMMENDED_ITEMS_REQUEST,
+  GET_RECOMMENDED_ITEMS_SUCCESS
+} from '../actions/cart';
 
 const initialState = {
   items: [],
   itemsRequest: false,
   itemsFailed: false,
 
-  recommendedItems,
+  recommendedItems: [],
+  recommendedItemsRequest: false,
+  recommendedItemsFailed: false,
 
-  promoCode: "PROMOCODE",
-  promoDiscount: 50,
+  promoCode: '',
+  promoDiscount: null,
+  promoRequest: false,
+  promoFailed: false,
 
-  currentTab: "items",
+  currentTab: 'items'
 };
 
 export const cartReducer = (state = initialState, action) => {
@@ -28,16 +37,11 @@ export const cartReducer = (state = initialState, action) => {
     case GET_ITEMS_REQUEST: {
       return {
         ...state,
-        itemsRequest: true,
+        itemsRequest: true
       };
     }
     case GET_ITEMS_SUCCESS: {
-      return {
-        ...state,
-        itemsFailed: false,
-        items: action.items,
-        itemsRequest: false,
-      };
+      return { ...state, itemsFailed: false, items: action.items, itemsRequest: false };
     }
     case GET_ITEMS_FAILED: {
       return { ...state, itemsFailed: true, itemsRequest: false };
@@ -45,36 +49,74 @@ export const cartReducer = (state = initialState, action) => {
     case TAB_SWITCH: {
       return {
         ...state,
-        currentTab: state.currentTab === "items" ? "postponed" : "items",
+        currentTab: state.currentTab === 'items' ? 'postponed' : 'items'
       };
+    }
+    case GET_RECOMMENDED_ITEMS_REQUEST: {
+      return {
+        ...state,
+        recommendedItemsRequest: true
+      };
+    }
+    case GET_RECOMMENDED_ITEMS_SUCCESS: {
+      return {
+        ...state,
+        recommendedItemsFailed: false,
+        recommendedItems: action.items,
+        recommendedItemsRequest: false
+      };
+    }
+    case GET_RECOMMENDED_ITEMS_FAILED: {
+      return { ...state, recommendedItemsFailed: true, recommendedItemsRequest: false };
     }
     case INCREASE_ITEM: {
       return {
         ...state,
-        items: [...state.items].map((item) =>
+        items: [...state.items].map(item =>
           item.id === action.id ? { ...item, qty: ++item.qty } : item
-        ),
+        )
       };
     }
     case DECREASE_ITEM: {
       return {
         ...state,
-        items: [...state.items].map((item) =>
+        items: [...state.items].map(item =>
           item.id === action.id ? { ...item, qty: --item.qty } : item
-        ),
+        )
       };
     }
     case DELETE_ITEM: {
+      return { ...state, items: [...state.items].filter(item => item.id !== action.id) };
+    }
+    case APPLY_PROMO_FAILED: {
       return {
         ...state,
-        items: [...state.items].filter((item) => item.id !== action.id),
+        promoRequest: false,
+        promoFailed: true,
+        promoDiscount: null,
+        promoCode: ''
+      };
+    }
+    case APPLY_PROMO_REQUEST: {
+      return {
+        ...state,
+        promoFailed: false,
+        promoRequest: true
+      };
+    }
+    case APPLY_PROMO_SUCCESS: {
+      return {
+        ...state,
+        promoRequest: false,
+        promoCode: action.value.code,
+        promoDiscount: action.value.discount
       };
     }
     case CANCEL_PROMO: {
       return {
         ...state,
-        promoCode: "",
-        promoDiscount: null,
+        promoCode: '',
+        promoDiscount: null
       };
     }
     default: {
