@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/react-cart/static/css/main.0577d0aa.css",
-    "main.js": "/react-cart/static/js/main.c93b6bb9.js",
+    "main.css": "/react-cart/static/css/main.7e050fc1.css",
+    "main.js": "/react-cart/static/js/main.8a3dbc7c.js",
     "static/js/787.9c52cd5e.chunk.js": "/react-cart/static/js/787.9c52cd5e.chunk.js",
     "static/media/prod-1.jpg": "/react-cart/static/media/prod-1.945fea1768ab68f3d1e6.jpg",
     "static/media/rec-1.png": "/react-cart/static/media/rec-1.32e8f9fe16eda8b62d1f.png",
@@ -9,15 +9,17 @@
     "static/media/prod-2.jpg": "/react-cart/static/media/prod-2.9a2c786001b6dad6baa9.jpg",
     "static/media/rec-3.png": "/react-cart/static/media/rec-3.389187aab2df791e8d41.png",
     "static/media/rec-4.png": "/react-cart/static/media/rec-4.ab2f9a7683798d4f4b80.png",
+    "static/media/express.svg": "/react-cart/static/media/express.66319d79cac455c0cbbc549abebfcd0f.svg",
+    "static/media/standart.svg": "/react-cart/static/media/standart.b4020a69e704a126311963c61de1dd4e.svg",
     "static/media/drag.svg": "/react-cart/static/media/drag.ecf99da5de4249d566e1.svg",
     "index.html": "/react-cart/index.html",
     "static/media/close.svg": "/react-cart/static/media/close.b14ef029348c8b8f2d2df107d76f5e5a.svg",
-    "main.0577d0aa.css.map": "/react-cart/static/css/main.0577d0aa.css.map",
-    "main.c93b6bb9.js.map": "/react-cart/static/js/main.c93b6bb9.js.map",
+    "main.7e050fc1.css.map": "/react-cart/static/css/main.7e050fc1.css.map",
+    "main.8a3dbc7c.js.map": "/react-cart/static/js/main.8a3dbc7c.js.map",
     "787.9c52cd5e.chunk.js.map": "/react-cart/static/js/787.9c52cd5e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0577d0aa.css",
-    "static/js/main.c93b6bb9.js"
+    "static/css/main.7e050fc1.css",
+    "static/js/main.8a3dbc7c.js"
   ]
 }
