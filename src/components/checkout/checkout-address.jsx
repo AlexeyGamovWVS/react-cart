@@ -1,12 +1,13 @@
-import { useSelector } from "react-redux";
-import styles from "./checkout-address.module.css";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import styles from './checkout-address.module.css';
 
 export const CheckoutAddress = ({ extraClass }) => {
-  const { deliveryForm, deliveryMethod } = useSelector((state) => ({
+  const { deliveryForm, deliveryMethod } = useSelector(state => ({
     deliveryForm: state.delivery.deliveryForm,
     deliveryMethod: state.delivery.deliveryMethods.find(
-      (method) => method.id === state.delivery.selectedDeliveryId
-    ),
+      method => method.id === state.delivery.selectedDeliveryId
+    )
   }));
   return (
     <ul className={`${styles.container} ${extraClass}`}>

@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { withYMaps } from "react-yandex-maps";
-import { MainButton } from "../../ui/main-button/main-button";
-import { Input } from "../../ui/input/input";
-import styles from "./delivery.module.css";
+import React, { useState, useRef, useEffect } from 'react';
+import { withYMaps } from '@pbe/react-yandex-maps';
+import { MainButton } from '../../ui/main-button/main-button';
+import { Input } from '../../ui/input/input';
+import styles from './delivery.module.css';
 
 export const MapSuggestComponent = withYMaps(
   ({ onChange, value, ymaps }) => {
@@ -10,19 +10,25 @@ export const MapSuggestComponent = withYMaps(
 
     const [_value, _setValue] = useState(value);
 
-    useEffect(() => {
-      _setValue(value);
-    }, [value]);
+    useEffect(
+      () => {
+        _setValue(value);
+      },
+      [value]
+    );
 
-    useEffect(() => {
-      new ymaps.SuggestView("suggest");
-    }, [ymaps.SuggestView]);
+    useEffect(
+      () => {
+        new ymaps.SuggestView('suggest');
+      },
+      [ymaps.SuggestView]
+    );
 
-    const onBlur = (e) => {
+    const onBlur = e => {
       setTimeout(() => onChange(inputRef.current.value), 0);
     };
 
-    const onEdit = (e) => {
+    const onEdit = e => {
       _setValue(e.target.value);
     };
 
@@ -46,5 +52,5 @@ export const MapSuggestComponent = withYMaps(
     );
   },
   true,
-  ["SuggestView", "geocode", "coordSystem.geo"]
+  ['SuggestView', 'geocode', 'coordSystem.geo']
 );

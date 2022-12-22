@@ -3,6 +3,7 @@ import {
   CANCEL_PROMO,
   DECREASE_ITEM,
   INCREASE_ITEM,
+  ADD_ITEM,
   GET_ITEMS_FAILED,
   GET_ITEMS_REQUEST,
   GET_ITEMS_SUCCESS,
@@ -13,7 +14,9 @@ import {
   GET_RECOMMENDED_ITEMS_FAILED,
   GET_RECOMMENDED_ITEMS_REQUEST,
   GET_RECOMMENDED_ITEMS_SUCCESS,
-} from "../actions/cart";
+  ADD_POSTPONED_ITEM,
+  DELETE_POSTPONED_ITEM
+} from '../actions/cart';
 
 const initialState = {
   featured: [],
@@ -29,12 +32,12 @@ const initialState = {
 
   postponedItems: [],
 
-  promoCode: "",
+  promoCode: '',
   promoDiscount: null,
   promoRequest: false,
   promoFailed: false,
 
-  currentTab: "items",
+  currentTab: 'items'
 };
 
 export const cartReducer = (state = initialState, action) => {
@@ -42,16 +45,11 @@ export const cartReducer = (state = initialState, action) => {
     case GET_ITEMS_REQUEST: {
       return {
         ...state,
-        itemsRequest: true,
+        itemsRequest: true
       };
     }
     case GET_ITEMS_SUCCESS: {
-      return {
-        ...state,
-        itemsFailed: false,
-        items: action.items,
-        itemsRequest: false,
-      };
+      return { ...state, itemsFailed: false, items: action.items, itemsRequest: false };
     }
     case GET_ITEMS_FAILED: {
       return { ...state, itemsFailed: true, itemsRequest: false };
@@ -60,7 +58,7 @@ export const cartReducer = (state = initialState, action) => {
     case GET_RECOMMENDED_ITEMS_REQUEST: {
       return {
         ...state,
-        recommendedItemsRequest: true,
+        recommendedItemsRequest: true
       };
     }
     case GET_RECOMMENDED_ITEMS_SUCCESS: {
@@ -68,43 +66,42 @@ export const cartReducer = (state = initialState, action) => {
         ...state,
         recommendedItemsFailed: false,
         recommendedItems: action.items,
-        recommendedItemsRequest: false,
+        recommendedItemsRequest: false
       };
     }
     case GET_RECOMMENDED_ITEMS_FAILED: {
-      return {
-        ...state,
-        recommendedItemsFailed: true,
-        recommendedItemsRequest: false,
-      };
+      return { ...state, recommendedItemsFailed: true, recommendedItemsRequest: false };
     }
 
     case TAB_SWITCH: {
       return {
         ...state,
-        currentTab: state.currentTab === "items" ? "postponed" : "items",
+        currentTab: state.currentTab === 'items' ? 'postponed' : 'items'
       };
     }
     case INCREASE_ITEM: {
       return {
         ...state,
-        items: [...state.items].map((item) =>
+        items: [...state.items].map(item =>
           item.id === action.id ? { ...item, qty: ++item.qty } : item
-        ),
+        )
       };
     }
     case DECREASE_ITEM: {
       return {
         ...state,
-        items: [...state.items].map((item) =>
+        items: [...state.items].map(item =>
           item.id === action.id ? { ...item, qty: --item.qty } : item
-        ),
+        )
       };
     }
     case DELETE_ITEM: {
+      return { ...state, items: [...state.items].filter(item => item.id !== action.id) };
+    }
+    case ADD_ITEM: {
       return {
         ...state,
-        items: [...state.items].filter((item) => item.id !== action.id),
+        items: [...state.items, ...state.postponed.filter(item => item.id === action.id)]
       };
     }
     case APPLY_PROMO_FAILED: {
@@ -113,14 +110,14 @@ export const cartReducer = (state = initialState, action) => {
         promoRequest: false,
         promoFailed: true,
         promoDiscount: null,
-        promoCode: "",
+        promoCode: ''
       };
     }
     case APPLY_PROMO_REQUEST: {
       return {
         ...state,
         promoFailed: false,
-        promoRequest: true,
+        promoRequest: true
       };
     }
     case APPLY_PROMO_SUCCESS: {
@@ -128,15 +125,24 @@ export const cartReducer = (state = initialState, action) => {
         ...state,
         promoRequest: false,
         promoCode: action.value.code,
-        promoDiscount: action.value.discount,
+        promoDiscount: action.value.discount
       };
     }
     case CANCEL_PROMO: {
       return {
         ...state,
-        promoCode: "",
-        promoDiscount: null,
+        promoCode: '',
+        promoDiscount: null
       };
+    }
+    case ADD_POSTPONED_ITEM: {
+      return {
+        ...state,
+        postponed: [...state.postponed, ...state.items.filter(item => item.id === action.id)]
+      };
+    }
+    case DELETE_POSTPONED_ITEM: {
+      return { ...state, postponed: [...state.postponed].filter(item => item.id !== action.id) };
     }
     default: {
       return state;

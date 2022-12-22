@@ -1,17 +1,17 @@
-import { useRef, useEffect, useCallback } from "react";
-import { YMaps, Map } from "react-yandex-maps";
-import { InputsBox } from "./inputs-box";
-import styles from "./delivery.module.css";
-import { DeliveryMethod } from "./delivery-method";
-import { useDispatch, useSelector } from "react-redux";
-import { SET_DELIVERY_FORM_VALUE } from "../../services/actions/delivery";
-import { MapSuggestComponent } from "./delivery-suggest-input";
+import React, { useRef, useEffect, useCallback } from 'react';
+import { YMaps, Map } from '@pbe/react-yandex-maps';
+import { InputsBox } from './inputs-box';
+import styles from './delivery.module.css';
+import { DeliveryMethod } from './delivery-method';
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_DELIVERY_FORM_VALUE } from '../../services/actions/delivery';
+import { MapSuggestComponent } from './delivery-suggest-input';
 
 const mapState = {
   center: [55.753994, 37.622093],
   zoom: 9,
-  behaviors: ["scrollZoom"],
-  controls: [],
+  behaviors: ['scrollZoom'],
+  controls: []
 };
 
 export default function SuggestInput({ onChange, value }) {
@@ -23,72 +23,66 @@ export default function SuggestInput({ onChange, value }) {
 }
 
 export const Delivery = () => {
-  const address = useSelector((state) => state.delivery.deliveryForm.address);
+  const address = useSelector(state => state.delivery.deliveryForm.address);
   const dispatch = useDispatch();
-  const setAddress = (address) => {
-    dispatch({
-      type: SET_DELIVERY_FORM_VALUE,
-      field: "address",
-      value: address,
-    });
+  const setAddress = address => {
+    dispatch({ type: SET_DELIVERY_FORM_VALUE, field: 'address', value: address });
   };
   const ymaps = useRef(null);
   const placemarkRef = useRef(null);
   const mapRef = useRef(null);
 
-  const getGeocodeResult = async (criteria) => {
-    return !!ymaps.current && !!criteria
-      ? await ymaps.current.geocode(criteria)
-      : null;
+  const getGeocodeResult = async criteria => {
+    return !!ymaps.current && !!criteria ? await ymaps.current.geocode(criteria) : null;
   };
   const createPlacemark = useCallback(
-    (coords) => {
+    coords => {
       return new ymaps.current.Placemark(
         coords,
         {},
         {
-          preset: "islands#blueCircleDotIcon",
+          preset: 'islands#blueCircleDotIcon'
         }
       );
     },
     [ymaps]
   );
 
-  const getAddressByCoords = async (coords) => {
-    placemarkRef.current.properties.set("iconCaption", "Загрузка...");
+  const getAddressByCoords = async coords => {
+    placemarkRef.current.properties.set('iconCaption', 'Загрузка...');
     const result = await getGeocodeResult(coords);
     if (result) {
       const newAddress = getAddressFromGeocodeResult(result);
       setAddress(newAddress);
 
       placemarkRef.current.properties.set({
-        iconCaption: "",
+        iconCaption: ''
       });
     }
   };
 
-  const getAddressFromGeocodeResult = useCallback((data) => {
+  const getAddressFromGeocodeResult = useCallback(data => {
     const firstGeoObject = data.geoObjects.get(0);
     const newAddress = [
       firstGeoObject.getLocalities().length
         ? firstGeoObject.getLocalities()
         : firstGeoObject.getAdministrativeAreas(),
       firstGeoObject.getThoroughfare() || firstGeoObject.getPremise(),
-      !!firstGeoObject.getPremiseNumber() && firstGeoObject.getPremiseNumber(),
+      !!firstGeoObject.getPremiseNumber() && firstGeoObject.getPremiseNumber()
     ]
       .filter(Boolean)
-      .join(", ");
+      .join(', ');
     return newAddress;
   }, []);
 
-  const zoomToPoint = (coords) => {
+  const zoomToPoint = coords => {
     mapRef.current.setCenter(coords);
 
     mapRef.current.setZoom(18, {
       smooth: true,
       position: coords,
       centering: true,
-      duration: 5,
+      duration: 5
     });
   };
 
@@ -105,7 +99,7 @@ export const Delivery = () => {
   };
 
   const renderPlaceMark = useCallback(
-    (coords) => {
+    coords => {
       if (placemarkRef.current) {
         placemarkRef.current.geometry.setCoordinates(coords);
       } else {
@@ -117,21 +111,24 @@ export const Delivery = () => {
   );
 
   const onMapClick = useCallback(
-    (e) => {
-      const coords = e.get("coords");
+    e => {
+      const coords = e.get('coords');
       renderPlaceMark(coords);
       getAddressByCoords(coords);
     },
     [getAddressByCoords, renderPlaceMark]
   );
 
-  useEffect(() => {
-    if (address) {
-      updatePlaceMark();
-    }
-  }, [address]);
+  useEffect(
+    () => {
+      if (address) {
+        updatePlaceMark();
+      }
+    },
+    [address]
+  );
 
-  const onLoad = (ymapsInstance) => {
+  const onLoad = ymapsInstance => {
     ymaps.current = ymapsInstance;
   };
 
@@ -143,7 +140,7 @@ export const Delivery = () => {
       <div className={styles.map}>
         <YMaps>
           <Map
-            modules={["Placemark", "geocode", "geoObject.addon.balloon"]}
+            modules={['Placemark', 'geocode', 'geoObject.addon.balloon']}
             instanceRef={mapRef}
             onLoad={onLoad}
             onClick={onMapClick}

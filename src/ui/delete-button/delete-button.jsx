@@ -1,12 +1,9 @@
-import styles from "./delete-button.module.css";
+import React from 'react';
+import styles from './delete-button.module.css';
 
 export const DeleteButton = ({ extraClass, onDelete }) => {
   return (
-    <button
-      type="button"
-      className={`${styles.button} ${extraClass}`}
-      onClick={onDelete}
-    >
+    <button type="button" className={`${styles.button} ${extraClass}`} onClick={onDelete}>
       <svg
         width="24"
         height="24"

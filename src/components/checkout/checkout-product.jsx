@@ -1,4 +1,5 @@
-import styles from "./checkout-product.module.css";
+import React from 'react';
+import styles from './checkout-product.module.css';
 
 export const CheckoutProduct = ({ src, text, qty, extraClass }) => {
   return (

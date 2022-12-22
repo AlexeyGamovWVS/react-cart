@@ -3,8 +3,8 @@ import {
   GET_DELIVERY_METHODS_FAILED,
   SET_DELIVERY_FORM_VALUE,
   SET_DELIVERY_METHOD,
-  GET_DELIVERY_METHODS_SUCCESS,
-} from "../actions/delivery";
+  GET_DELIVERY_METHODS_SUCCESS
+} from '../actions/delivery';
 
 const deliveryInitialState = {
   deliveryMethods: [],
@@ -12,13 +12,13 @@ const deliveryInitialState = {
   deliveryMethodsFailed: false,
   selectedDeliveryId: null,
   deliveryForm: {
-    name: "",
-    phone: "",
-    address: "",
-    unitNumber: "",
-    intercom: "",
-    floor: "",
-  },
+    name: '',
+    phone: '',
+    address: '',
+    unitNumber: '',
+    intercom: '',
+    floor: ''
+  }
 };
 export const deliveryReducer = (state = deliveryInitialState, action) => {
   switch (action.type) {
@@ -26,14 +26,14 @@ export const deliveryReducer = (state = deliveryInitialState, action) => {
       return {
         ...state,
         deliveryMethodsFailed: false,
-        deliveryMethodsRequest: true,
+        deliveryMethodsRequest: true
       };
     }
     case GET_DELIVERY_METHODS_FAILED: {
       return {
         ...state,
         deliveryMethodsFailed: true,
-        deliveryMethodsRequest: false,
+        deliveryMethodsRequest: false
       };
     }
     case GET_DELIVERY_METHODS_SUCCESS: {
@@ -44,13 +44,13 @@ export const deliveryReducer = (state = deliveryInitialState, action) => {
         selectedDeliveryId:
           !!action.methods.length && state.selectedDeliveryId === null
             ? action.methods[0].id
-            : state.selectedDeliveryId,
+            : state.selectedDeliveryId
       };
     }
     case SET_DELIVERY_METHOD: {
       return {
         ...state,
-        selectedDeliveryId: action.id,
+        selectedDeliveryId: action.id
       };
     }
     case SET_DELIVERY_FORM_VALUE: {
@@ -58,8 +58,8 @@ export const deliveryReducer = (state = deliveryInitialState, action) => {
         ...state,
         deliveryForm: {
           ...state.deliveryForm,
-          [action.field]: action.value,
-        },
+          [action.field]: action.value
+        }
       };
     }
     default: {

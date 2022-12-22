@@ -1,55 +1,66 @@
-import { useCallback, useEffect, useRef, useMemo } from "react";
-import styles from "./products-container.module.css";
-import { Product } from "./product";
-import { Input } from "../../ui/input/input";
-import { MainButton } from "../../ui/main-button/main-button";
-import { PromoButton } from "../../ui/promo-button/promo-button";
-import { useDispatch, useSelector } from "react-redux";
-import { applyPromo, getItems } from "../../services/actions/cart";
-import { Loader } from "../../ui/loader/loader";
+import React, { useCallback, useEffect, useRef, useMemo } from 'react';
+import styles from './products-container.module.css';
+import { Product } from './product';
+import { Input } from '../../ui/input/input';
+import { MainButton } from '../../ui/main-button/main-button';
+import { PromoButton } from '../../ui/promo-button/promo-button';
+import { useDispatch, useSelector } from 'react-redux';
+import { applyPromo, getItems } from '../../services/actions/cart';
+import { Loader } from '../../ui/loader/loader';
 
 export const ProductsContainer = () => {
   const dispatch = useDispatch();
   const {
     items,
+    postponed,
     promoCode,
     promoDiscount,
     promoRequest,
     promoFailed,
-    itemsRequest,
-  } = useSelector((state) => state.cart);
+    itemsRequest
+  } = useSelector(state => state.cart);
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    dispatch(getItems());
-  }, [dispatch]);
+  useEffect(
+    () => {
+      if (!items.length && !postponed.length) dispatch(getItems());
+    },
+    [dispatch]
+  );
 
-  const applyPromoCode = useCallback(() => {
-    dispatch(applyPromo(inputRef.current.value));
-  }, [inputRef, dispatch]);
+  const applyPromoCode = useCallback(
+    () => {
+      dispatch(applyPromo(inputRef.current.value));
+    },
+    [inputRef, dispatch]
+  );
 
-  const content = useMemo(() => {
-    return itemsRequest ? (
-      <Loader size="large" />
-    ) : (
-      items.map((item, index) => {
-        return <Product key={index} {...item} />;
-      })
-    );
-  }, [itemsRequest, items]);
-  const promoCodeStatus = useMemo(() => {
-    return promoFailed ? (
-      <p className={styles.text}>
-        Произошла ошибка! Проверьте корректность введенного промокода
-      </p>
-    ) : promoRequest ? (
-      ""
-    ) : !!promoCode && !!promoDiscount ? (
-      <p className={styles.text}>Промокод успешно применён!</p>
-    ) : (
-      ""
-    );
-  }, [promoRequest, promoDiscount, promoFailed, promoCode]);
+  const content = useMemo(
+    () => {
+      return itemsRequest ? (
+        <Loader size="large" />
+      ) : (
+        items.map((item, index) => {
+          return <Product key={index} {...item} />;
+        })
+      );
+    },
+    [itemsRequest, items]
+  );
+  const promoCodeStatus = useMemo(
+    () => {
+      return promoFailed ? (
+        <p className={styles.text}>Произошла ошибка! Проверьте корректность введенного промокода</p>
+      ) : promoRequest ? (
+        ''
+      ) : !!promoCode && !!promoDiscount ? (
+        <p className={styles.text}>Промокод успешно применён!</p>
+      ) : (
+        ''
+      );
+    },
+    [promoRequest, promoDiscount, promoFailed, promoCode]
+  );
 
   return (
     <div className={`${styles.container}`}>
@@ -69,11 +80,7 @@ export const ProductsContainer = () => {
             inputButton={true}
             onClick={applyPromoCode}
           >
-            {promoRequest ? (
-              <Loader size="small" inverse={true} />
-            ) : (
-              "Применить"
-            )}
+            {promoRequest ? <Loader size="small" inverse={true} /> : 'Применить'}
           </MainButton>
         </div>
         {!!promoCode && !!promoDiscount && (

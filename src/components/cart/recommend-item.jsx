@@ -1,6 +1,7 @@
-import styles from "./recommend-item.module.css";
-import { MainButton } from "../../ui/main-button/main-button";
-import { priceFormat } from "../common/utils";
+import React from 'react';
+import styles from './recommend-item.module.css';
+import { MainButton } from '../../ui/main-button/main-button';
+import { priceFormat } from '../common/utils';
 
 export const RecommendItem = ({ src, price, text }) => {
   return (
